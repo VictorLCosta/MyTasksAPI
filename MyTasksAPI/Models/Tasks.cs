@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyTasksAPI.Models
 {
-    public class Task
+    public class Tasks
     {
         [Key]
         public int IdTaskApi { get; set; }

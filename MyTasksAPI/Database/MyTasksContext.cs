@@ -12,6 +12,6 @@ namespace MyTasksAPI.Database
             
         }
 
-        public DbSet<Task> Tasks { get; set; }
+        public DbSet<Tasks> Tasks { get; set; }
     }
 }

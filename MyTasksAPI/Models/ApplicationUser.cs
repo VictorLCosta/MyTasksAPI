@@ -9,7 +9,6 @@ namespace MyTasksAPI.Models
         public string FullName { get; set; }
 
         [ForeignKey("UsuarioId")]
-        public ICollection<Task> Tasks { get; set; }
-
+        public ICollection<Tasks> Tasks { get; set; }
     }
 }
