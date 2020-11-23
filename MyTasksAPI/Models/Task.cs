@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyTasksAPI.Models
 {
@@ -13,5 +14,10 @@ namespace MyTasksAPI.Models
         public bool Done { get; set; }
         public DateTime Created { get; set; }
         public DateTime Updated { get; set; }
+
+        [ForeignKey(nameof(User))]
+        public string UserId { get; set; }
+        
+        public virtual ApplicationUser User { get; set; }
     }
 }

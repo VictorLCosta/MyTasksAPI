@@ -15,7 +15,7 @@ namespace MyTasksAPI.Models.DTO
         public string Password { get; set; }
 
         [Required]
-        [Compare(nameof(PasswordConfirm))]
+        [Compare(nameof(Password))]
         public string PasswordConfirm { get; set; }
 
     }
