@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using MyTasksAPI.Database;
 using Microsoft.EntityFrameworkCore;
+using MyTasksAPI.Repositories;
+using MyTasksAPI.Repositories.Contracts;
 
 namespace MyTasksAPI
 {
@@ -24,6 +26,10 @@ namespace MyTasksAPI
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            //REPOSITORIES
+            services.AddScoped<ITaskRepository, TaskRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -34,6 +40,7 @@ namespace MyTasksAPI
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseStatusCodePages();
             app.UseMvc();
         }
     }

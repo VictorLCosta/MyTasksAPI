@@ -5,7 +5,7 @@ namespace MyTasksAPI.Repositories.Contracts
 {
     public interface IUserRepository
     {
-        Task CreateAsync(ApplicationUser user, string senha);
-        Task<ApplicationUser> FindAsync(string email, string senha);
+        Task CreateAsync(ApplicationUser user, string password);
+        Task<ApplicationUser> FindAsync(string email, string password);
     }
 }

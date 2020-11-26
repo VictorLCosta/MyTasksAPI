@@ -17,9 +17,9 @@ namespace MyTasksAPI.Repositories
             _context = context;
         }
 
-        public async Task CreateAsync(ApplicationUser user, string senha)
+        public async Task CreateAsync(ApplicationUser user, string password)
         {
-            var result = await _context.CreateAsync(user, senha);
+            var result = await _context.CreateAsync(user, password);
             if(!result.Succeeded)
             {
                 StringBuilder sb = new StringBuilder();
@@ -32,10 +32,10 @@ namespace MyTasksAPI.Repositories
             }
         }
 
-        public async Task<ApplicationUser> FindAsync(string email, string senha)
+        public async Task<ApplicationUser> FindAsync(string email, string password)
         {
             var user = await _context.FindByEmailAsync(email);
-            if(await _context.CheckPasswordAsync(user, senha))
+            if(await _context.CheckPasswordAsync(user, password))
             {
                 return user;
             }
