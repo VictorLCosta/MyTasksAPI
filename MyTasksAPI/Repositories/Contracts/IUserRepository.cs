@@ -1,5 +1,6 @@
 using MyTasksAPI.Models; 
 using System.Threading.Tasks;
+using System.Text;
 
 namespace MyTasksAPI.Repositories.Contracts
 {

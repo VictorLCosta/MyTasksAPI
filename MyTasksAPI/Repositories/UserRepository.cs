@@ -22,7 +22,7 @@ namespace MyTasksAPI.Repositories
             var result = await _context.CreateAsync(user, password);
             if(!result.Succeeded)
             {
-                StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new StringBuilder(); 
                 foreach (var erro in result.Errors)
                 {
                     sb.AppendLine(erro.Description);
@@ -41,7 +41,7 @@ namespace MyTasksAPI.Repositories
             }
             else
             {
-                throw new Exception("Usuário não encontrado!");
+                throw new Exception("Usuário nã encotrado!");
             }
         }
     }
