@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using MyTasksAPI.Models;
 using MyTasksAPI.Models.DTO;
 using MyTasksAPI.Repositories.Contracts;
+using System.Security.Principal;
+using System.Security.Claims;
 
 namespace MyTasksAPI.Controllers
 {
@@ -24,6 +26,7 @@ namespace MyTasksAPI.Controllers
             _userManager = userManager;
         }
 
+        [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody]DTOUser _user)
         {
             if(_user == null)
@@ -54,6 +57,7 @@ namespace MyTasksAPI.Controllers
             }
         }
 
+        [HttpPost("")]
         public async Task<IActionResult> Create([FromBody]DTOUser _user)
         {
             if(_user == null)
@@ -67,6 +71,7 @@ namespace MyTasksAPI.Controllers
                 user.FullName = _user.Name;
                 user.Email = _user.Email;
 
+                
                 var result = await _userManager.CreateAsync(user, _user.Password);
                 
                 if(!result.Succeeded)

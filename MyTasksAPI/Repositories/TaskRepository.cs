@@ -31,7 +31,8 @@ namespace MyTasksAPI.Repositories
 
         public async Task<List<Tasks>> Synchronization(List<Tasks> tasks)
         {
-            var newTasks = tasks.Where(t => t.IdTaskApi == 0);
+            var newTasks = tasks.Where(t => t.IdTaskApi == 0).ToList();
+            var updatedTasks = tasks.Where(t => t.IdTaskApi != 0).ToList();
 
             if(newTasks.Count() > 0)
             {
@@ -40,8 +41,6 @@ namespace MyTasksAPI.Repositories
                     await _context.Tasks.AddAsync(task);
                 }
             }
-
-            var updatedTasks = tasks.Where(t => t.IdTaskApi != 0);
 
             if(updatedTasks.Count() > 0)
             {

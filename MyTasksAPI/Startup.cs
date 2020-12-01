@@ -11,6 +11,8 @@ using MyTasksAPI.Database;
 using Microsoft.EntityFrameworkCore;
 using MyTasksAPI.Repositories;
 using MyTasksAPI.Repositories.Contracts;
+using MyTasksAPI.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace MyTasksAPI
 {
@@ -20,12 +22,27 @@ namespace MyTasksAPI
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<ApiBehaviorOptions>(op => {
+                op.SuppressModelStateInvalidFilter = true;
+            });
+
             services.AddDbContext<MyTasksContext>(op => 
             {
                 op.UseSqlite("Data Source=Database\\MyTasks.db");
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddJsonOptions(opt =>
+                    opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                );
+
+                services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<MyTasksContext>();
+                services.ConfigureApplicationCookie(opt => {
+                    opt.Events.OnRedirectToLogin = context => {
+                        context.Response.StatusCode = 401;
+                        return Task.CompletedTask;
+                    };
+                });
 
             //REPOSITORIES
             services.AddScoped<ITaskRepository, TaskRepository>();

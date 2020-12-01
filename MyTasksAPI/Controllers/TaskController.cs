@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MyTasksAPI.Models;
@@ -21,11 +22,15 @@ namespace MyTasksAPI.Controllers
             _user = user;
         }
 
+        [Authorize]
+        [HttpPost("synchronizate")]
         public async Task<IActionResult> Synchronizate([FromBody]List<Tasks> tasks)
         {
             return Ok(await _repo.Synchronization(tasks));
         }
 
+        [Authorize]
+        [HttpGet("restore")]
         public async Task<IActionResult> Restore(DateTime date)
         {
             var user = await _user.GetUserAsync(HttpContext.User);
