@@ -8,7 +8,6 @@ using Microsoft.Extensions.Configuration;
 using MyTasksAPI.Models;
 using MyTasksAPI.Models.DTO;
 using MyTasksAPI.Repositories.Contracts;
-using System.Security.Principal;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -107,7 +106,8 @@ namespace MyTasksAPI.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(JwtRegisteredClaimNames.Email, user.Email)
+                    new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                    new Claim(JwtRegisteredClaimNames.Sub, user.Id)
                 }),
                 Expires = DateTime.UtcNow.AddHours(10),
                 SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256),
