@@ -47,8 +47,6 @@ namespace MyTasksAPI.Controllers
                 ApplicationUser user = await _repository.FindAsync(_user.Email, _user.Password);
                 if(user != null)
                 {
-                    await _manager.SignInAsync(user, false);
-
                     return Ok(GenerateToken(user));
                 }
                 else
@@ -97,7 +95,7 @@ namespace MyTasksAPI.Controllers
             }
         }
 
-        public string GenerateToken(ApplicationUser user)
+        public object GenerateToken(ApplicationUser user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_conf.GetValue<string>("Key")));
@@ -109,14 +107,16 @@ namespace MyTasksAPI.Controllers
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
                     new Claim(JwtRegisteredClaimNames.Sub, user.Id)
                 }),
-                Expires = DateTime.UtcNow.AddHours(10),
+                Expires = DateTime.UtcNow.AddDays(10),
                 SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256),
                 Issuer = null,
                 Audience = null,
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            string tokenString = tokenHandler.WriteToken(token);
+
+            return new { token = tokenString, expiration = tokenDescriptor.Expires, refreshToken = "", expirationRefreshToken = tokenDescriptor.Expires };
         }
     }
 }
