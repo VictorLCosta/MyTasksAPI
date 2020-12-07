@@ -40,7 +40,7 @@ namespace MyTasksAPI
 
             services.AddDbContext<MyTasksContext>(op => 
             {
-                op.UseSqlite("Data Source=Database\\MyTasks.db");
+                op.UseSqlite(_conf.GetConnectionString("MyTasksContext"));
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
@@ -87,6 +87,7 @@ namespace MyTasksAPI
             //REPOSITORIES
             services.AddScoped<ITaskRepository, TaskRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ITokenRepository, TokenRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -95,6 +96,10 @@ namespace MyTasksAPI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseHsts();
             }
 
             app.UseAuthentication();

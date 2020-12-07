@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MyTasksAPI.Migrations
 {
-    public partial class Initial : Migration
+    public partial class AddFKToken : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -157,14 +157,16 @@ namespace MyTasksAPI.Migrations
                 name: "Tasks",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    IdTaskApi = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    IdTaskApp = table.Column<int>(nullable: false),
                     Title = table.Column<string>(nullable: true),
                     DateHour = table.Column<DateTime>(nullable: false),
                     Local = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
                     Tipo = table.Column<string>(nullable: true),
                     Done = table.Column<bool>(nullable: false),
+                    Removed = table.Column<bool>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false),
                     Updated = table.Column<DateTime>(nullable: false),
                     UserId = table.Column<string>(nullable: true),
@@ -172,7 +174,7 @@ namespace MyTasksAPI.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tasks", x => x.Id);
+                    table.PrimaryKey("PK_Tasks", x => x.IdTaskApi);
                     table.ForeignKey(
                         name: "FK_Tasks_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -181,6 +183,38 @@ namespace MyTasksAPI.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Tasks_AspNetUsers_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tokens",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    RefreshToken = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: true),
+                    Used = table.Column<bool>(nullable: false),
+                    ExpirationDate = table.Column<DateTime>(nullable: false),
+                    ExpirationRefreshToken = table.Column<DateTime>(nullable: false),
+                    Created = table.Column<DateTime>(nullable: false),
+                    Updated = table.Column<DateTime>(nullable: true),
+                    UsuarioId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tokens", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Tokens_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Tokens_AspNetUsers_UsuarioId",
                         column: x => x.UsuarioId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -233,6 +267,16 @@ namespace MyTasksAPI.Migrations
                 name: "IX_Tasks_UsuarioId",
                 table: "Tasks",
                 column: "UsuarioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tokens_UserId",
+                table: "Tokens",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tokens_UsuarioId",
+                table: "Tokens",
+                column: "UsuarioId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -254,6 +298,9 @@ namespace MyTasksAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "Tasks");
+
+            migrationBuilder.DropTable(
+                name: "Tokens");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

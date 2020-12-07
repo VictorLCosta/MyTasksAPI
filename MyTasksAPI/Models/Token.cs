@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyTasksAPI.Models
 {
@@ -6,6 +7,9 @@ namespace MyTasksAPI.Models
     {
         public int Id { get; set; }
         public string RefreshToken { get; set; }
+
+        [ForeignKey(nameof(User))]
+        public string UserId { get; set; }
         public ApplicationUser User { get; set; }
         public bool Used { get; set; }
         public DateTime ExpirationDate { get; set; }

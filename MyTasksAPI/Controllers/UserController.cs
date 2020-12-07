@@ -19,14 +19,17 @@ namespace MyTasksAPI.Controllers
     public class UserController : ControllerBase
     {
         private IConfiguration _conf;
+
         private readonly IUserRepository _repository;
         private readonly SignInManager<ApplicationUser> _manager;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ITokenRepository _tokenRepo;
 
-        public UserController(IConfiguration conf, IUserRepository repository, SignInManager<ApplicationUser> manager, UserManager<ApplicationUser> userManager)
+        public UserController(IConfiguration conf, IUserRepository repository, SignInManager<ApplicationUser> manager, UserManager<ApplicationUser> userManager, ITokenRepository tokenRepo)
         {
             _conf = conf;
             _repository = repository;
+            _tokenRepo = tokenRepo;
             _manager = manager;
             _userManager = userManager;
         }
@@ -47,7 +50,20 @@ namespace MyTasksAPI.Controllers
                 ApplicationUser user = await _repository.FindAsync(_user.Email, _user.Password);
                 if(user != null)
                 {
-                    return Ok(GenerateToken(user));
+                    var token = GenerateToken(user);
+
+                    var tokenModel = new Token
+                    {
+                        RefreshToken = token.RefreshToken,
+                        ExpirationDate = token.ExpirationDate,
+                        ExpirationRefreshToken = token.ExpirationRefreshToken,
+                        User = user,
+                        Created = DateTime.Now,
+                        Used = false
+                    };
+
+                    await _tokenRepo.Create(tokenModel);
+                    return Ok(token);
                 }
                 else
                 {
@@ -58,6 +74,26 @@ namespace MyTasksAPI.Controllers
             {
                 return UnprocessableEntity(ModelState);
             }
+        }
+
+        [HttpPost("Renovate")]
+        public async Task<IActionResult> Renovate([FromBody]DTOToken _token)
+        {
+            var refreshToken = await _tokenRepo.GetToken(_token.RefreshToken);
+
+            if(refreshToken == null)
+            {
+                return NotFound();
+            }
+
+            refreshToken.Updated = DateTime.Now;
+            refreshToken.Used = true;
+            await _tokenRepo.Update(refreshToken);
+
+            //Gerando token
+            var user = await _repository.FindAsync(refreshToken.UserId);
+
+            return BuildNewToken(user);
         }
 
         [HttpPost("")]
@@ -95,7 +131,7 @@ namespace MyTasksAPI.Controllers
             }
         }
 
-        public object GenerateToken(ApplicationUser user)
+        private DTOToken GenerateToken(ApplicationUser user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_conf.GetValue<string>("Key")));
@@ -114,9 +150,30 @@ namespace MyTasksAPI.Controllers
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            string tokenString = tokenHandler.WriteToken(token);
 
-            return new { token = tokenString, expiration = tokenDescriptor.Expires, refreshToken = "", expirationRefreshToken = tokenDescriptor.Expires };
+            string tokenString = tokenHandler.WriteToken(token);
+            var expirationToken = DateTime.UtcNow.AddDays(15);
+
+            return new DTOToken { Token = tokenString, ExpirationDate = tokenDescriptor.Expires.Value, ExpirationRefreshToken = expirationToken };
+        }
+
+        private IActionResult BuildNewToken(ApplicationUser user)
+        {
+            var token = GenerateToken(user);
+
+            //Salvar o Token no Banco
+            var tokenModel = new Token()
+            {
+                RefreshToken = token.RefreshToken,
+                ExpirationDate = token.ExpirationDate,
+                ExpirationRefreshToken = token.ExpirationRefreshToken,
+                User = user,
+                Created = DateTime.Now,
+                Used = false
+            };
+
+            _tokenRepo.Create(tokenModel);
+            return Ok(token);
         }
     }
 }

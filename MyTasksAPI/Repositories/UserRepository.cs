@@ -44,5 +44,10 @@ namespace MyTasksAPI.Repositories
                 throw new Exception("Usuário nã encotrado!");
             }
         }
+
+        public async Task<ApplicationUser> FindAsync(string id)
+        {
+            return await _context.FindByIdAsync(id);
+        }
     }
 }

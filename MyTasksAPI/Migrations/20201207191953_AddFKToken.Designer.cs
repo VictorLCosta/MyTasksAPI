@@ -9,8 +9,8 @@ using MyTasksAPI.Database;
 namespace MyTasksAPI.Migrations
 {
     [DbContext(typeof(MyTasksContext))]
-    [Migration("20201123214015_TasksSincronization")]
-    partial class TasksSincronization
+    [Migration("20201207191953_AddFKToken")]
+    partial class AddFKToken
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -177,7 +177,7 @@ namespace MyTasksAPI.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("MyTasksAPI.Models.Task", b =>
+            modelBuilder.Entity("MyTasksAPI.Models.Tasks", b =>
                 {
                     b.Property<int>("IdTaskApi")
                         .ValueGeneratedOnAdd();
@@ -213,6 +213,36 @@ namespace MyTasksAPI.Migrations
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("Tasks");
+                });
+
+            modelBuilder.Entity("MyTasksAPI.Models.Token", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("Created");
+
+                    b.Property<DateTime>("ExpirationDate");
+
+                    b.Property<DateTime>("ExpirationRefreshToken");
+
+                    b.Property<string>("RefreshToken");
+
+                    b.Property<DateTime?>("Updated");
+
+                    b.Property<bool>("Used");
+
+                    b.Property<string>("UserId");
+
+                    b.Property<string>("UsuarioId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("Tokens");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -260,7 +290,7 @@ namespace MyTasksAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("MyTasksAPI.Models.Task", b =>
+            modelBuilder.Entity("MyTasksAPI.Models.Tasks", b =>
                 {
                     b.HasOne("MyTasksAPI.Models.ApplicationUser", "User")
                         .WithMany()
@@ -268,6 +298,17 @@ namespace MyTasksAPI.Migrations
 
                     b.HasOne("MyTasksAPI.Models.ApplicationUser")
                         .WithMany("Tasks")
+                        .HasForeignKey("UsuarioId");
+                });
+
+            modelBuilder.Entity("MyTasksAPI.Models.Token", b =>
+                {
+                    b.HasOne("MyTasksAPI.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.HasOne("MyTasksAPI.Models.ApplicationUser")
+                        .WithMany("Tokens")
                         .HasForeignKey("UsuarioId");
                 });
 #pragma warning restore 612, 618
