@@ -1,8 +1,8 @@
-using MyTasksAPI.Models; 
+using MyTasksAPI.V1.Models; 
 using System.Threading.Tasks;
 using System.Text;
 
-namespace MyTasksAPI.Repositories.Contracts
+namespace MyTasksAPI.V1.Repositories.Contracts
 {
     public interface IUserRepository
     {

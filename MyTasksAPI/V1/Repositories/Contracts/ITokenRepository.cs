@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using MyTasksAPI.Models;
+using MyTasksAPI.V1.Models;
 
-namespace MyTasksAPI.Repositories.Contracts
+namespace MyTasksAPI.V1.Repositories.Contracts
 {
     public interface ITokenRepository
     {

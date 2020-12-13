@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using MyTasksAPI.Models;
+using MyTasksAPI.V1.Models;
 
 namespace MyTasksAPI.Database
 {

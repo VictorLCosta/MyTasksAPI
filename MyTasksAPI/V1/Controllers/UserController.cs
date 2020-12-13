@@ -5,17 +5,18 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using MyTasksAPI.Models;
-using MyTasksAPI.Models.DTO;
-using MyTasksAPI.Repositories.Contracts;
+using MyTasksAPI.V1.Models;
+using MyTasksAPI.V1.Models.DTO;
+using MyTasksAPI.V1.Repositories.Contracts;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System;
 
-namespace MyTasksAPI.Controllers
+namespace MyTasksAPI.V1.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class UserController : ControllerBase
     {
         private IConfiguration _conf;

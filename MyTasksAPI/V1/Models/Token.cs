@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MyTasksAPI.Models
+namespace MyTasksAPI.V1.Models
 {
     public class Token
     {

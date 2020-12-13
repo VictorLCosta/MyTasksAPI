@@ -3,10 +3,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using MyTasksAPI.Database;
-using MyTasksAPI.Models;
-using MyTasksAPI.Repositories.Contracts;
+using MyTasksAPI.V1.Models;
+using MyTasksAPI.V1.Repositories.Contracts;
 
-namespace MyTasksAPI.Repositories
+namespace MyTasksAPI.V1.Repositories
 {
     public class UserRepository : IUserRepository
     {

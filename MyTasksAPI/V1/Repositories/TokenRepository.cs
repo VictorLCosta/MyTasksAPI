@@ -2,10 +2,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MyTasksAPI.Database;
-using MyTasksAPI.Models;
-using MyTasksAPI.Repositories.Contracts;
+using MyTasksAPI.V1.Models;
+using MyTasksAPI.V1.Repositories.Contracts;
 
-namespace MyTasksAPI.Repositories
+namespace MyTasksAPI.V1.Repositories
 {
     public class TokenRepository : ITokenRepository
     {

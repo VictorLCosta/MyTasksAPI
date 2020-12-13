@@ -2,11 +2,11 @@ using MyTasksAPI.Database;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MyTasksAPI.Models;
-using MyTasksAPI.Repositories.Contracts;
 using System.Linq;
+using MyTasksAPI.V1.Repositories.Contracts;
+using MyTasksAPI.V1.Models;
 
-namespace MyTasksAPI.Repositories
+namespace MyTasksAPI.V1.Repositories
 {
     public class TaskRepository : ITaskRepository
     {

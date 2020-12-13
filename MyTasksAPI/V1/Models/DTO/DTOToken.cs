@@ -1,6 +1,6 @@
 using System;
 
-namespace MyTasksAPI.Models.DTO
+namespace MyTasksAPI.V1.Models.DTO
 {
     public class DTOToken
     {

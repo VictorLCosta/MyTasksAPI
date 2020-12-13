@@ -1,16 +1,17 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using MyTasksAPI.Models;
-using MyTasksAPI.Repositories.Contracts;
+using MyTasksAPI.V1.Models;
+using MyTasksAPI.V1.Repositories.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MyTasksAPI.Controllers
+namespace MyTasksAPI.V1.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class TaskController : ControllerBase
     {
         private readonly ITaskRepository _repo;
